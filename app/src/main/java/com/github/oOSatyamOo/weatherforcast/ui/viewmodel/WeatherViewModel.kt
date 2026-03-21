@@ -1,0 +1,40 @@
+package com.github.oOSatyamOo.weatherforcast.ui.viewmodel
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.github.oOSatyamOo.weatherforcast.repo.WeatherRepo
+import com.github.oOSatyamOo.weatherforcast.ui.viewmodel.state.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
+    private val repository: WeatherRepo
+) : ViewModel() {
+
+    var uiState by mutableStateOf<UiState>(UiState.Loading)
+        private set
+
+    fun fetchWeather(city: String) {
+        if (city.isBlank()) {
+            uiState = UiState.Error("Please enter a city name")
+            return
+        }
+
+        viewModelScope.launch {
+            uiState = UiState.Loading
+            try {
+                val forecast = repository.getForecast(city.trim())
+                uiState = UiState.Success(forecast)
+            } catch (e: Exception) {
+                uiState = UiState.Error(
+                    e.message ?: "Failed to fetch weather. Please check your internet or try again."
+                )
+            }
+        }
+    }
+}

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -5,12 +7,18 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+
 android {
     namespace = "com.github.oOSatyamOo.weatherforcast"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
         }
+    }
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
     }
 
     defaultConfig {
@@ -20,8 +28,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField("String", "OPENWEATHER_BASE_URL", "\"${localProperties.getProperty("OPENWEATHER_BASE_URL", "")}\"")
+        buildConfigField("String", "OPENWEATHER_API_KEY", "\"${localProperties.getProperty("OPENWEATHER_API_KEY", "")}\"")
+
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "OPENWEATHER_API_KEY", "\"${project.properties["OPENWEATHER_API_KEY"]}\"")
     }
 
     buildTypes {
@@ -33,6 +44,7 @@ android {
             )
         }
     }
+
 //    composeOptions {
 //        kotlinCompilerExtensionVersion = libs.versions.kotlin.get()
 //    }
@@ -63,6 +75,9 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation(libs.okhttp.logging)
 
     // Retrofit
     implementation(libs.retrofit)
@@ -76,10 +91,17 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler) // kapt
+    implementation(libs.hilt.navigation.compose)
+
 
     // Coil
     implementation(libs.coil.compose)
 
     // Gson
     implementation(libs.gson)
+
+    //Live Data
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
 }
