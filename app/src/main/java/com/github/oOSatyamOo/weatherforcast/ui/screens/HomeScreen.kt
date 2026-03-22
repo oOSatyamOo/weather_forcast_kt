@@ -22,6 +22,7 @@ import com.github.oOSatyamOo.weatherforcast.ui.components.PrimaryTextField
 import com.github.oOSatyamOo.weatherforcast.ui.components.WeatherAppBar
 import com.github.oOSatyamOo.weatherforcast.ui.theme.WeatherForcastTheme
 import com.github.oOSatyamOo.weatherforcast.ui.viewmodel.state.UiState
+import com.github.oOSatyamOo.weatherforcast.utils.onlyLettersAndSpaces
 
 @Composable
 fun HomeScreen(
@@ -63,21 +64,25 @@ fun HomeScreenContent(
                 horizontalArrangement = Arrangement.Center
 
             ) {
-                PrimaryTextField(
-                    value = city,
-                    onValueChange = {
-                        city = it
-                        onCityChanged(it)
-                    },
-                    label = "Enter City Name"
-                )
+                    PrimaryTextField(
+                        value = city,
+                        onValueChange = {
+                            val filtered = it.onlyLettersAndSpaces()
+                            city = filtered
+                            onCityChanged(filtered)
+                        },
+                        label = "Enter City Name",
+                        modifier = Modifier.weight(1f)
+                    )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                PrimaryButton(
-                    "Fetch",
-                    onClick = { onFetchClick(city) },)
-            }
+                    PrimaryButton(
+                        "Fetch",
+                        onClick = { onFetchClick(city) },
+                        modifier = Modifier.wrapContentWidth()
+                    )
+                }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -112,7 +117,9 @@ fun HomeScreenContent(
                     Spacer(modifier = Modifier.height(16.dp))
                     PrimaryButton(
                         "Retry",
-                        onClick = { onFetchClick(city) },)
+                        onClick = { onFetchClick(city) },
+                        modifier = Modifier.fillMaxWidth()
+                        )
                 }
             }
         }

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.oOSatyamOo.weatherforcast.repo.WeatherRepo
+import com.github.oOSatyamOo.weatherforcast.repo.usecase.GetWeatherForecastUseCase
 import com.github.oOSatyamOo.weatherforcast.ui.viewmodel.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -15,12 +15,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val repository: WeatherRepo
+    private val getWeatherUseCase: GetWeatherForecastUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf<UiState>(UiState.Loading)
         private set
 
+    init {
+        fetchWeather("Bangalore")
+    }
     fun fetchWeather(city: String) {
         if (city.isBlank()) {
             uiState = UiState.Error("Please enter a city name")
@@ -30,7 +33,7 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch {
             uiState = UiState.Loading
             try {
-                val forecast = repository.getForecast(city.trim())
+                val forecast = getWeatherUseCase(city.trim())
                 uiState = UiState.Success(forecast)
             } catch (e: Exception) {
                 uiState = UiState.Error(
