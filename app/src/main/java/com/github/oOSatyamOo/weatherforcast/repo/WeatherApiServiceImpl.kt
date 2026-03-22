@@ -10,11 +10,14 @@ import javax.inject.Named
 class WeatherRepositoryImpl @Inject constructor(
     private val apiService: WeatherApiService,
     private val dao: ForecastDao,
-    @Named("apiKey") private val apiKey: String
+    private val apiKey: String
 ) : WeatherRepo {
     override suspend fun getForecast(city: String): List<DailyForecast> {
+        require(city.trim().isNotEmpty()) {
+            "City name cannot be empty"
+        }
         return try {
-            // Try network
+
             val response = apiService.getForecast(city, apiKey)
             val dailyList = mapToDailyForecasts(response)
 
@@ -27,9 +30,8 @@ class WeatherRepositoryImpl @Inject constructor(
 
             dailyList
         } catch (e: Exception) {
-            // Offline → load cache
             dao.getForecast(city.lowercase())?.dailyForecasts
-                ?: throw Exception("No internet and no cached data")
+                ?: throw Exception(e.message)
         }
     }
 

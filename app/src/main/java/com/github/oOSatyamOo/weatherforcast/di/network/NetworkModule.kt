@@ -9,6 +9,7 @@ import com.github.oOSatyamOo.weatherforcast.data.local.WeatherDatabase
 import com.github.oOSatyamOo.weatherforcast.repo.WeatherApiService
 import com.github.oOSatyamOo.weatherforcast.repo.WeatherRepo
 import com.github.oOSatyamOo.weatherforcast.repo.WeatherRepositoryImpl
+import com.github.oOSatyamOo.weatherforcast.repo.usecase.GetWeatherForecastUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -115,6 +116,10 @@ class NetworkModule {
         return retrofit.create(WeatherRepo::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideGetWeatherForecastUseCase(repository: WeatherRepo): GetWeatherForecastUseCase =
+        GetWeatherForecastUseCase(repository)
 
     @Provides
     @Singleton

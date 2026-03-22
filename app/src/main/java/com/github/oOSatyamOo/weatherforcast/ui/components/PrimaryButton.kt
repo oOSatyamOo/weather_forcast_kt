@@ -14,11 +14,12 @@ import androidx.compose.ui.unit.dp
 fun PrimaryButton(
     text: String,
     icon: ImageVector? = null,
+    modifier: Modifier,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
     ) {
         if (icon != null) {
             Icon(icon, contentDescription = null)
