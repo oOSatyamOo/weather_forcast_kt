@@ -1,6 +1,6 @@
 # Weather Forecast App
 
-A modern, clean Android weather forecast application built with **Jetpack Compose**, following **Clean Architecture** and **SOLID principles**. The app displays a 3-day weather forecast for any city with full offline support.
+A modern, clean Android weather forecast application built with **Jetpack Compose**, following **MVVM**, **Clean Architecture** and **SOLID principles**. The app displays a 3-day weather forecast for any city with full offline support.
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-blue.svg)
 ![Compose](https://img.shields.io/badge/Jetpack%20Compose-2026.03.00-green.svg)
@@ -28,23 +28,94 @@ A modern, clean Android weather forecast application built with **Jetpack Compos
 - **Testing**: JUnit 4, MockK, Turbine, Compose UI Testing, Hilt Testing
 - **Build System**: Gradle with Version Catalog (`libs.versions.toml`)
 
+## 🛠 Structure
+    Root
+    ├── app/
+    │   ├── src/
+    │   │   ├── androidTest/
+    │   │   │   ├── java/
+    │   │   │   │   ├── com/
+    │   │   │   │   │   ├── github/
+    │   │   │   │   │   │   ├── oOSatyamOo/
+    │   │   │   │   │   │   │   ├── weatherforcast/
+    │   │   │   │   │   │   │   │   ├── ExampleInstrumentedTest.kt
+    │   │   ├── main/
+    │   │   │   ├── java/
+    │   │   │   │   ├── com/
+    │   │   │   │   │   ├── github/
+    │   │   │   │   │   │   ├── oOSatyamOo/
+    │   │   │   │   │   │   │   ├── weatherforcast/
+    │   │   │   │   │   │   │   │   ├── data/
+    │   │   │   │   │   │   │   │   │   ├── local/
+    │   │   │   │   │   │   │   │   │   │   ├── Converters.kt
+    │   │   │   │   │   │   │   │   │   │   ├── DailyForcast.kt
+    │   │   │   │   │   │   │   │   │   │   ├── ForcastDao.kt
+    │   │   │   │   │   │   │   │   │   │   ├── WeatherDatabase.kt
+    │   │   │   │   │   │   │   │   │   │   ├── WeatherForcastEntity.kt
+    │   │   │   │   │   │   │   │   │   ├── remote/
+    │   │   │   │   │   │   │   │   │   │   ├── ForcastResponse.kt
+    │   │   │   │   │   │   │   │   ├── di/
+    │   │   │   │   │   │   │   │   │   ├── component/
+    │   │   │   │   │   │   │   │   │   │   ├── AppComponent.kt
+    │   │   │   │   │   │   │   │   │   ├── network/
+    │   │   │   │   │   │   │   │   │   │   ├── NetworkModule.kt
+    │   │   │   │   │   │   │   │   ├── repo/
+    │   │   │   │   │   │   │   │   │   ├── usecase/
+    │   │   │   │   │   │   │   │   │   │   ├── GetWeatherForcastUsecase.kt
+    │   │   │   │   │   │   │   │   │   ├── WeatherApiService.kt
+    │   │   │   │   │   │   │   │   │   ├── WeatherApiServiceImpl.kt
+    │   │   │   │   │   │   │   │   │   ├── WeatherRepo.kt
+    │   │   │   │   │   │   │   │   ├── ui/
+    │   │   │   │   │   │   │   │   │   ├── components/
+    │   │   │   │   │   │   │   │   │   │   ├── PrimaryButton.kt
+    │   │   │   │   │   │   │   │   │   │   ├── PrimaryTextField.kt
+    │   │   │   │   │   │   │   │   │   │   ├── WeatherAppBar.kt
+    │   │   │   │   │   │   │   │   │   │   ├── WeatherCard.kt
+    │   │   │   │   │   │   │   │   │   ├── screens/
+    │   │   │   │   │   │   │   │   │   │   ├── HomeScreen.kt
+    │   │   │   │   │   │   │   │   │   ├── theme/
+    │   │   │   │   │   │   │   │   │   │   ├── Color.kt
+    │   │   │   │   │   │   │   │   │   │   ├── Theme.kt
+    │   │   │   │   │   │   │   │   │   │   ├── Type.kt
+    │   │   │   │   │   │   │   │   │   ├── viewmodel/
+    │   │   │   │   │   │   │   │   │   │   ├── state/
+    │   │   │   │   │   │   │   │   │   │   │   └── UIState.kt
+    │   │   │   │   │   │   │   │   │   │   ├── WeatherViewModel.kt
+    │   │   │   │   │   │   │   │   ├── utils/
+    │   │   │   │   │   │   │   │   │   ├── FormatValidations.kt
+    │   │   │   │   │   │   │   │   ├── MainActivity.kt
+    │   │   │   │   │   │   │   │   ├── WeatherApp.kt
+    │   │   │   ├── res/
+    │   │   ├── test/
+    │   │   │   └── java/
+    │   │   │       └── com/
+    │   │   │           └── github/
+    │   │   │               └── oOSatyamOo/
+    │   │   │                   └── weatherforcast/
+    │   │   │                       ├── domain/
+    │   │   │                       │   ├── usecase/
+    │   │   │                       │   │   ├── GetWeatherForecastUseCaseTest.kt
+    │   │   │                       └── presentation/
+    │   │   │                           └── ui/
+    │   │   │                               └── WeatherViewModel.kt
+    │   ├── .gitignore
+    │   ├── build.gradle.kts
+    │   ├── proguard-rules.pro
+    ├── gradle/
+    │   ├── wrapper/
+    │   │   └── gradle-wrapper.properties
+    │   ├── gradle-daemon-jvm.properties
+    │   └── libs.versions.toml
+    ├── .gitattributes
+    ├── .gitignore
+    ├── build.gradle.kts
+    ├── gradle.properties
+    ├── gradlew
+    ├── gradlew.bat
+    ├── README.md
+    └── settings.gradle.kts
+
 ## 📱 Screenshots
-
-*(Add your screenshots here once you have them)*
-
-## 🚀 How to Run the Project
-
-### Prerequisites
-- Android Studio Meerkat | Ladybug | or newer
-- Minimum SDK: 24 (Android 7.0)
-- An API key from [OpenWeatherMap](https://openweathermap.org/api)
-
-### Setup Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/WeatherForecastApp.git
-   cd WeatherForecastApp
 <div align="center">
   <table border="0">
     <tr>
@@ -64,4 +135,34 @@ A modern, clean Android weather forecast application built with **Jetpack Compos
     </tr>
   </table>
 </div>
+
+## 🚀 How to Run the Project
+
+### Prerequisites
+- Android Studio Meerkat | Ladybug | or newer
+- Minimum SDK: 24 (Android 7.0)
+- An API key from [OpenWeatherMap](https://openweathermap.org/api)
+- add API KEY to local.properties
+   ```
+   OPENWEATHER_BASE_URL=https://api.openweathermap.org/
+   OPENWEATHER_API_KEY=your_actual_api_key_here
+   ```
+
+### Available Tests Cases
+- Unit Tests: UseCase, ViewModel
+- UI Tests: Compose UI testing with Hilt
+
+   ```
+   ./gradlew test
+
+   ./gradlew connectedAndroidTest
+   ```
+
+### 📌 Key Design Decisions
+
+Debounced Search: API call triggers only after user stops typing for 2 seconds
+Offline First: Always tries network first, falls back to cached data
+SOLID Principles: Clear separation of concerns using Use Cases
+Dependency Inversion: ViewModel depends on UseCase, not Repository directly
+
 
