@@ -29,7 +29,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseUrl(): String = BuildConfig.OPENWEATHER_BASE_URL
+    fun provideBaseUrl(): String = BuildConfig.OPENWEATHER_BASE_URL+"data/2.5/"
 
     @Provides
     @Singleton
@@ -67,11 +67,12 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
     @Provides
     @Singleton
     fun provideApiService(): WeatherApiService =
         Retrofit.Builder()
-            .baseUrl(BuildConfig.OPENWEATHER_BASE_URL)
+            .baseUrl(BuildConfig.OPENWEATHER_BASE_URL+"data/2.5/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherApiService::class.java)

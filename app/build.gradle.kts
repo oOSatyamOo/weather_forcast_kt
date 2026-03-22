@@ -45,9 +45,10 @@ android {
         }
     }
 
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = libs.versions.kotlin.get()
-//    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.kotlin.get()
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

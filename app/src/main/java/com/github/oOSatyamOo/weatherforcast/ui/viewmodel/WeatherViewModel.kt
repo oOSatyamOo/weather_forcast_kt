@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.github.oOSatyamOo.weatherforcast.repo.WeatherRepo
 import com.github.oOSatyamOo.weatherforcast.ui.viewmodel.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,6 +36,19 @@ class WeatherViewModel @Inject constructor(
                 uiState = UiState.Error(
                     e.message ?: "Failed to fetch weather. Please check your internet or try again."
                 )
+            }
+        }
+    }
+    private var searchJob: Job? = null
+
+    fun onCityChanged(city: String) {
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(1000)
+
+            if (city.isNotBlank()) {
+                fetchWeather(city.trim())
             }
         }
     }
