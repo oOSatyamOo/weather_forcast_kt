@@ -25,6 +25,7 @@ class WeatherViewModel @Inject constructor(
         fetchWeather("Bangalore")
     }
     fun fetchWeather(city: String) {
+
         if (city.isBlank()) {
             uiState = UiState.Error("Please enter a city name")
             return
